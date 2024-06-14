@@ -36,10 +36,13 @@ def get_db():
 async def get_ice_data():
     return FileResponse("data/new_data.json")
 
-
 @app.get("/graph_data")
 async def get_graph_data():
     return FileResponse("data/graph.csv")
+
+@app.get("/routes/{id}")
+async def get_route_data(id: int):
+    return FileResponse(f"data/route_{id}.json")
 
 
 def get_db():
@@ -89,14 +92,6 @@ def get_all_routes(db: Session = Depends(get_db)):
 def get_all_routes(db: Session = Depends(get_db)):
     ships = db.query(Ship).all()
     return ships
-
-
-@app.get("/routes/{id}")
-def get_route_by_id(id: int, db: Session = Depends(get_db)):
-    route = db.query(Route).filter(Route.id == id).first()
-    if route is None:
-        raise HTTPException(status_code=404, detail="Route not found")
-    return route
 
 
 if __name__ == "__main__":
