@@ -93,6 +93,16 @@ def get_all_routes(db: Session = Depends(get_db)):
     ships = db.query(Ship).all()
     return ships
 
+@app.get("/locations/")
+def get_all_locations(db: Session = Depends(get_db)):
+    locations = db.query(Location).all()
+    return locations
+
+@app.get("/edges/")
+def get_all_edges(db: Session = Depends(get_db)):
+    edges = db.query(Edge).all()
+    return edges
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8123)
