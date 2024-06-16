@@ -1,26 +1,3 @@
-<script setup>
-import TabMenu from '@/components/TabMenu.vue'
-import axios from 'axios'
-</script>
-
-<script>
-const Responde = await axios.get(import.meta.env.VITE_BACK_URL + '/route_requests/')
-const statuses = ['Новый', 'Построен', 'Пройден']
-const colors = ['bg-white texxt-black', 'bg-green', 'bg-grey']
-
-function formatDate(date) {
-  let dd = date.getDate()
-  if (dd < 10) dd = '0' + dd
-
-  let mm = date.getMonth() + 1
-  if (mm < 10) mm = '0' + mm
-
-  let yyyy = date.getFullYear()
-
-  return dd + '.' + mm + '.' + yyyy
-}
-</script>
-
 <template>
   <v-app>
     <v-app-bar>
@@ -31,7 +8,7 @@ function formatDate(date) {
 
     <v-main class="">
       <v-row dense class="pa-10">
-        <v-col v-for="route_request in Responde.data" :key="route_request.id" cols="12" md="4">
+        <v-col v-for="route_request in responde" :key="route_request.id" cols="12" md="4">
           <v-card
             variant="outlined"
             v-bind:key="route_request.id"
@@ -62,4 +39,38 @@ function formatDate(date) {
   </v-app>
 </template>
 
-<style></style>
+<script setup>
+import TabMenu from '@/components/TabMenu.vue'
+import axios from 'axios'
+</script>
+
+<script>
+const statuses = ['Новый', 'Построен', 'Пройден']
+const colors = ['bg-white texxt-black', 'bg-green', 'bg-grey']
+
+function formatDate(date) {
+  let dd = date.getDate()
+  if (dd < 10) dd = '0' + dd
+
+  let mm = date.getMonth() + 1
+  if (mm < 10) mm = '0' + mm
+
+  let yyyy = date.getFullYear()
+
+  return dd + '.' + mm + '.' + yyyy
+}
+export default {
+  components: {},
+  data() {
+    return {
+      responde: null,
+    };
+  },
+  methods: {
+    async fetchCatTags(be_url) {
+      const Responde = await this.$axios.get(import.meta.env.VITE_BACK_URL + '/route_requests/')
+      this.responde = Responde.data
+    },
+  }
+}
+</script>
