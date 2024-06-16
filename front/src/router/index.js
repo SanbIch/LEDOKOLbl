@@ -1,12 +1,20 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import MapView from '../views/MapView.vue'
-import RequestView from '../views/RequestView.vue'
+// import MainView from '../views/MainView.vue'
+import MapView from '@/views/MapView.vue'
+import RequestView from '@/views/RequestView.vue'
+import GanttaView from '@/views/GanttaView.vue'
+import UploadIce from '@/views/UploadIce.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
+      name: 'root',
+      component: MapView
+    },
+    {
+      path: '/map',
       name: 'map',
       component: MapView
     },
@@ -18,6 +26,16 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       // component: () => import('../views/AboutView.vue')
+    },
+    {
+      path: '/icebreakers',
+      name: 'icebreakers',
+      component: GanttaView
+    },
+    {
+      path: '/upload_ice',
+      name: 'upload_ice',
+      component: UploadIce
     }
   ]
 })

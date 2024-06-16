@@ -11,13 +11,17 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@infectoone/vue-ganttastic": "^2.3.2",
     "@mapbox/mapbox-gl-language": "^1.0.1",
+    "axios": "^1.7.2",
     "deck.gl": "^9.0.17",
     "pinia": "^2.1.7",
+    "vite-plugin-vuetify": "^2.0.3",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
+    "@mdi/font": "^7.4.47",
     "@rushstack/eslint-patch": "^1.8.0",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/eslint-config-prettier": "^9.0.0",
