@@ -12,10 +12,11 @@
           <v-card
             variant="outlined"
             v-bind:key="route_request.id"
-            class="bg-indigo pa-3 rounded-xl"
+            class="pa-3 rounded-xl"
             color="white"
+            style="background-color: #23224E;"
           >
-            <p class="rounded-pill d-inline pa-2" :class="colors[route_request.status]">
+            <p class="rounded-pill d-inline pa-2" style="background-color: #5A58BB88;">
               {{ statuses[route_request.status] }}
             </p>
             <p>
@@ -28,7 +29,7 @@
               {{ formatDate(new Date(Date.parse(route_request.starting_date))) }}
             </p>
             <v-card-actions>
-              <v-btn to="/map" :disabled="route_request.status != 1" class="bg-green"
+              <v-btn to="/map" :disabled="route_request.status != 1" style="background-color: #5A58BB;"
                 >Открыть маршрут</v-btn
               >
             </v-card-actions>
@@ -49,7 +50,6 @@
       return {
         requests: [], 
         statuses: ['Новый', 'Построен', 'Пройден'],
-        colors: ['bg-white texxt-black', 'bg-green', 'bg-grey']
       };
     },
     mounted() {
