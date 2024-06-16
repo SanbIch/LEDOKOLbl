@@ -36,12 +36,11 @@ async function GenerateRouteLayers() {
         visible: props.layers.includes(route.id),
         getColor: (d) => {
           const hex = d.color
-          // convert to RGB
           return hex.match(/[0-9a-f]{2}/g).map((x) => parseInt(x, 16))
         },
         getPath: (d) => d.path,
         widthScale: 300,
-        getWidth: 100,
+        getWidth: 20,
         pickable: true
       })
     )
