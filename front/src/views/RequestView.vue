@@ -8,7 +8,7 @@
 
     <v-main class="">
       <v-row dense class="pa-10">
-        <v-col v-for="route_request in responde" :key="route_request.id" cols="12" md="4">
+        <v-col v-for="route_request in requests" :key="route_request.id" cols="12" md="4">
           <v-card
             variant="outlined"
             v-bind:key="route_request.id"
@@ -39,38 +39,44 @@
   </v-app>
 </template>
 
-<script setup>
-import TabMenu from '@/components/TabMenu.vue'
-import axios from 'axios'
-</script>
+  <script>
+  import axios from 'axios';
+  import TabMenu from '@/components/TabMenu.vue'
 
-<script>
-const statuses = ['Новый', 'Построен', 'Пройден']
-const colors = ['bg-white texxt-black', 'bg-green', 'bg-grey']
-
-function formatDate(date) {
-  let dd = date.getDate()
-  if (dd < 10) dd = '0' + dd
-
-  let mm = date.getMonth() + 1
-  if (mm < 10) mm = '0' + mm
-
-  let yyyy = date.getFullYear()
-
-  return dd + '.' + mm + '.' + yyyy
-}
-export default {
-  components: {},
-  data() {
-    return {
-      responde: null,
-    };
-  },
-  methods: {
-    async fetchCatTags(be_url) {
-      const Responde = await this.$axios.get(import.meta.env.VITE_BACK_URL + '/route_requests/')
-      this.responde = Responde.data
+  export default {
+    components: {TabMenu},
+    data() {
+      return {
+        requests: [], 
+        statuses: ['Новый', 'Построен', 'Пройден'],
+        colors: ['bg-white texxt-black', 'bg-green', 'bg-grey']
+      };
     },
-  }
-}
-</script>
+    mounted() {
+      this.fetchItems();
+    },
+    methods: {
+      fetchItems() {
+        axios.get(import.meta.env.VITE_BACK_URL + '/route_requests/') // Replace with your API endpoint
+          .then(response => {
+            this.requests = response.data;
+          })
+          .catch(error => {
+            console.error('Error fetching requests', error);
+          });
+      },
+      formatDate(date) {
+        let dd = date.getDate()
+        if (dd < 10) dd = '0' + dd
+
+        let mm = date.getMonth() + 1
+        if (mm < 10) mm = '0' + mm
+
+        let yyyy = date.getFullYear()
+
+        return dd + '.' + mm + '.' + yyyy
+      }
+    }
+  };
+  </script>
+  
