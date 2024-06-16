@@ -1,11 +1,14 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from sqlalchemy.orm import Session
 import uvicorn
+import pandas as pd
+import numpy as np
 
 from models import *
 from create_classes import *
+from algo import *
 
 app = FastAPI()
 
@@ -102,6 +105,46 @@ def get_all_locations(db: Session = Depends(get_db)):
 def get_all_edges(db: Session = Depends(get_db)):
     edges = db.query(Edge).all()
     return edges
+
+
+@app.post("/ice/")
+def upload_file(file: UploadFile = File(...)):
+    try:
+        contents = file.file.read()
+        with open('data/ice_excel.xlsx', 'wb') as f:
+            f.write(contents)
+
+        ice_data = pd.read_excel('data/ice_excel.xlsx', sheet_name=None, header=None)
+
+        new_data = pd.DataFrame()
+
+        try:
+            ice_shape = ice_data['lon'].shape
+            lats = ice_data['lat'].to_numpy().flatten()
+            lons = ice_data['lon'].to_numpy().flatten()
+            del ice_data['lat'], ice_data['lon']
+            new_data['COORDINATES'] = np.swapaxes(np.vstack((lons, lats)), 0, 1).tolist()
+
+            for sheet in ice_data.keys():
+                ice_day = ice_data[sheet]
+                assert ice_day.shape == ice_shape
+
+                new_data[sheet] = ice_data[sheet].to_numpy().flatten().tolist()
+
+        except Exception as e:
+            return JSONResponse(content={"error": str(e)}, status_code=500)
+        
+        current = new_data[['COORDINATES', list(new_data)[-1]]]
+        current.columns = ['COORDINATES', 'ICE']
+
+        current.to_json('data/new_data.json', orient='records')
+
+        process_routes(current)
+
+        return JSONResponse(content={"status": "OK"}, status_code=200)
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+   
 
 
 if __name__ == "__main__":
