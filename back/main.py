@@ -10,6 +10,9 @@ from models import *
 from create_classes import *
 from algo import *
 
+
+ICE_SHAPE = (269, 217)
+
 app = FastAPI()
 
 origins = [
@@ -138,8 +141,9 @@ def upload_file(file: UploadFile = File(...)):
         current.columns = ['COORDINATES', 'ICE']
 
         current.to_json('data/new_data.json', orient='records')
+        current.to_csv('data/new_data.csv', index=False)
 
-        process_routes(current)
+        process_edges(current, ice_shape)
 
         return JSONResponse(content={"status": "OK"}, status_code=200)
     except Exception as e:
